@@ -37,6 +37,18 @@ public class Cliente {
 
 	@Column(name = "dni", nullable = false, length = 8)
 	private String dni;
+	
+	@JsonIgnore
+	@Column(name = "foto", updatable = false)
+	private byte[] foto;
+
+	public byte[] getFoto() {
+		return foto;
+	}
+
+	public void setFoto(byte[] foto) {
+		this.foto = foto;
+	}
 
 	public Integer getIdCliente() {
 		return idCliente;
@@ -84,6 +96,31 @@ public class Cliente {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((idCliente == null) ? 0 : idCliente.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cliente other = (Cliente) obj;
+		if (idCliente == null) {
+			if (other.idCliente != null)
+				return false;
+		} else if (!idCliente.equals(other.idCliente))
+			return false;
+		return true;
 	}
 
 }

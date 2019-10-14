@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mitocode.model.Cliente;
 import com.mitocode.repo.IClienteRepo;
@@ -21,9 +22,16 @@ public class ClienteServiceImpl implements IClienteService{
 		return repo.save(obj);
 	}
 
+	/*
+	 * @Override public Cliente modificar(Cliente obj) { return repo.save(obj); }
+	 */
+	@Transactional
 	@Override
-	public Cliente modificar(Cliente obj) {
-		return repo.save(obj);
+	public Cliente modificar(Cliente obj){
+		if(obj.getFoto().length > 0) {
+			repo.modificarFoto(obj.getIdCliente(), obj.getFoto());			
+		}		
+		return repo.save(obj);		
 	}
 
 	@Override
