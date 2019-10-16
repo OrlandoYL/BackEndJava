@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mitocode.model.Cliente;
+import com.mitocode.model.Usuario;
 import com.mitocode.service.IClienteService;
+import com.mitocode.service.IUsuarioService;
 
 @RestController
 @RequestMapping("/clientes")
@@ -26,7 +29,10 @@ public class ClienteController {
 
 	@Autowired
 	private IClienteService service;
-	
+	@Autowired
+	private IUsuarioService serviceU;
+	@Autowired
+	private BCryptPasswordEncoder bcrypt;
 	@GetMapping
 	public List<Cliente> listar(){
 		return service.listar();
@@ -46,6 +52,15 @@ public class ClienteController {
 		cli.setFechaNac(cliente.getFechaNac());
 		cli.setDni(cliente.getDni());
 		cli.setFoto(file.getBytes());
+		
+		Usuario us = new Usuario();
+		us.setNombre(cliente.getNombres());
+		us.setClave(bcrypt.encode("123"));
+		us.setEstado(true);
+		cli.setUsuario(us);
+		us.setCliente(cli);
+		serviceU.registrarTransaccional(us);
+		
 		return service.registrar(cli);
 	}
 	 

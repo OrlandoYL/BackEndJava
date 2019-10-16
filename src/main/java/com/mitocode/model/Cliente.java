@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -23,6 +24,7 @@ public class Cliente {
 
 	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "cliente")
+	@JoinColumn(name="id_cliente",referencedColumnName="id_cliente")
 	private Usuario usuario;
 
 	@Column(name = "nombres", nullable = false, length = 80)
