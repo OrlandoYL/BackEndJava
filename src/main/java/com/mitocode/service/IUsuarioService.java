@@ -5,4 +5,5 @@ import com.mitocode.model.Usuario;
 public interface IUsuarioService{
 
 	public Usuario registrarTransaccional(Usuario us);
+	//List<Cliente> listarUsuarioId(Cliente cli);
 }

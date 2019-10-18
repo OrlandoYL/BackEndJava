@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.mitocode.model.Cliente;
 import com.mitocode.model.Usuario;
+import com.mitocode.repo.IUsuarioRepo;
 import com.mitocode.service.IClienteService;
 import com.mitocode.service.IUsuarioService;
 
@@ -31,6 +32,8 @@ public class ClienteController {
 	private IClienteService service;
 	@Autowired
 	private IUsuarioService serviceU;
+	@Autowired
+	private IUsuarioRepo userRepo;
 	@Autowired
 	private BCryptPasswordEncoder bcrypt;
 	@GetMapping
@@ -55,7 +58,7 @@ public class ClienteController {
 		
 		Usuario us = new Usuario();
 		us.setNombre(cliente.getNombres());
-		us.setClave(bcrypt.encode("123"));
+		us.setClave(bcrypt.encode(cliente.getDni()));
 		us.setEstado(true);
 		cli.setUsuario(us);
 		us.setCliente(cli);
@@ -85,12 +88,18 @@ public class ClienteController {
 	 * @GetMapping("/{id}") public Cliente listarPorId(@PathVariable("id") Integer
 	 * id) { return service.leer(id); }
 	 */
-	 @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-		public ResponseEntity<byte[]> listarPorId(@PathVariable("id") Integer id) {
-			Cliente cli = service.leer(id);
-			byte[] data = cli.getFoto();
-			return new ResponseEntity<byte[]>(data, HttpStatus.OK);
-		}
+	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public ResponseEntity<byte[]> listarPorId(@PathVariable("id") Integer id) {
+		Cliente cli = service.leer(id);
+		byte[] data = cli.getFoto();
+		return new ResponseEntity<byte[]>(data, HttpStatus.OK);
+	}
+	@GetMapping(value = "/buscar/{username}")
+	public Usuario FotoPorNomUsuario(@PathVariable("username") String username){
+		//Usuario user = userRepo.findOneByNombre(username);
+		return userRepo.findOneByNombre(username);
+	}	
+	
 	
 	@DeleteMapping("/{id}")
 	public void eliminar(@PathVariable("id") Integer id) {
